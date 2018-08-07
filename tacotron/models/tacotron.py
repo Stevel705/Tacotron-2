@@ -430,3 +430,4 @@ class Tacotron():
 
         #clip learning rate by max and min values (initial and final values)
         return tf.minimum(tf.maximum(lr, hp.tacotron_final_learning_rate), init_lr)
+

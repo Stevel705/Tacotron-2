@@ -22,7 +22,7 @@ def run_live(args, checkpoint_path, hparams):
     synth.load(checkpoint_path, hparams)
 
     #Generate fast greeting message
-    greetings = 'Hello, Welcome to the Live testing tool. Please type a message and I will try to read it!'
+    greetings = 'Привет, Добро пожаловать в инструмент лайв тестирования. Пожалуйста напиши сообщение и я попытаюсь прочитать его!'
     log(greetings)
     generate_fast(synth, greetings)
 
@@ -33,7 +33,7 @@ def run_live(args, checkpoint_path, hparams):
             generate_fast(synth, text)
 
         except KeyboardInterrupt:
-            leave = 'Thank you for testing our features. see you soon.'
+            leave = 'Спасибо тебе за тестирование. Увидимся позже.'
             log(leave)
             generate_fast(synth, leave)
             sleep(2)

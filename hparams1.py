@@ -59,7 +59,7 @@ hparams = tf.contrib.training.HParams(
     ###########################################################################################################################################
 
     #Tacotron
-    outputs_per_step = 1, #number of frames to generate at each decoding step (speeds up computation and allows for higher batch size)
+    outputs_per_step = 3, #number of frames to generate at each decoding step (speeds up computation and allows for higher batch size)
     stop_at_any = True, #Determines whether the decoder should stop when predicting <stop> to any frame or to all of them
 
     embedding_dim = 512, #dimension of embedding space
@@ -85,7 +85,7 @@ hparams = tf.contrib.training.HParams(
     postnet_channels = 512, #number of postnet convolution filters for each layer
 
     mask_encoder = False, #whether to mask encoder padding while computing attention
-    mask_decoder = False, #Whether to use loss mask for padded sequences (if False, <stop_token> loss function will not be weighted, else recommended pos_weight = 20)
+    mask_decoder = True, #Whether to use loss mask for padded sequences (if False, <stop_token> loss function will not be weighted, else recommended pos_weight = 20)
 
     cross_entropy_pos_weight = 20, #Use class weights to reduce the stop token classes imbalance (by adding more penalty on False Negatives (FN)) (1 = disabled)
     predict_linear = False, #Whether to add a post-processing network to the Tacotron to predict linear spectrograms (True mode Not tested!!)
@@ -139,8 +139,8 @@ hparams = tf.contrib.training.HParams(
 
     tacotron_decay_learning_rate = True, #boolean, determines if the learning rate will follow an exponential decay
     tacotron_start_decay = 50000, #Step at which learning decay starts
-    tacotron_decay_steps = 50000, #Determines the learning rate decay slope (UNDER TEST)
-    tacotron_decay_rate = 0.4, #learning rate decay rate (UNDER TEST)
+    tacotron_decay_steps = 40000, #Determines the learning rate decay slope (UNDER TEST)
+    tacotron_decay_rate = 0.2, #learning rate decay rate (UNDER TEST)
     tacotron_initial_learning_rate = 1e-3, #starting learning rate
     tacotron_final_learning_rate = 1e-5, #minimal learning rate
 
@@ -191,35 +191,30 @@ hparams = tf.contrib.training.HParams(
     #Eval sentences (if no eval file was specified, these sentences are used for eval)
     sentences = [
     # From July 8, 2017 New York Times:
-    'Ученые из лаборатории ЦЕРНА говорят, что обнаружили новую частицу.',
-    'Существует способ измерить острый эмоциональный интеллект, который никогда не выходил из моды.',
-    'Президент Путин встретился с другими лидерами на конференции "группы 20".',
-    'Законопроект Сената об отмене и замене закона О доступном уходе теперь находится под угрозой.',
+    'Привет, давно не виделись! А ты не торопился! Ну ладно, давай начинать!',
+    'Выберем твое игровое воплощение — для начала посмотри на свои руки.',
+    'Укажи рукой на тот аватар, который тебе понравился.',
+    'А теперь взгляни на свои руки!',
     # From Google's Tacotron example page:
-    'Генеративная состязательная сеть или вариационный автокодер.',
-    'Базилярная мембрана и отоларингология не являются автокорреляциями.',
-    'Он прочитал все целиком.',
-    'Он читает книги.',
-    "Не бросай меня здесь, в пустыне!",
-    'Он подумал, что пришло время представить подарок.',
-    'Это действительно потрясающе.',
-    'Пунктуационная чувствительность, работает.',
-    'Пунктуационная чувствительность работает.',
-    "Автобусы не проблема, они на самом деле обеспечивают решение",
-    "Автобусы не ПРОБЛЕМА, они на самом деле обеспечивают РЕШЕНИЕ.",
-    "Быстрая коричневая лиса перепрыгивает через ленивую собаку.",
-    "быстрая коричневая лиса перепрыгивает через ленивую собаку?",
-    "Рыла свинья белорыла, тупорыла; полдвора рылом изрыла, вырыла, подрыла.",
-    "И прыгают скороговорки, как караси на сковородке.",
-    "Голубая Лагуна американский романтический приключенческий фильм тысяча девятьсот восьмидесятого года.",
-    "Аэропорт тадзима обслуживает Тоёока.",
-    'Талиб Куили подтвердил новостному сайту, что он выпустит альбом в следующем году.',
-    #From Training data:
-    ' Подробности мало кому интересны. Достаточно только сказать. Завод - это сделанная из сети западня в десять сажен длиною и саженей пять в ширину.',
-    'но на другой же месяц попался в краже мешков.',
-    'Архиерей посадил Мисаила с собой и стал говорить о том, какие новости проявились в его епархии.',
-    'Где же это слыхано и видано, чтобы кошка собиралась говорить по телефону?',
-    'И вот однажды, с первым попутным ветром, на исходе ночи, но еще в глубокой тьме, сотни лодок отплывают от Крымского полуострова под парусами в море.',
+    'Отлично! А теперь подойди ко мне!',
+    'Давай откроем эту дверь. Посмотри на свои руки еще раз.',
+    'Ты можешь брать предметы как. как ты обычно берешь! Попробуй, поймай меня!',
+    'Щекотно! Отлично, а теперь помести меня в нишу и я открою тебе дверь! ',
+    "Знаешь, тут рядом, в адидас, как раз новая коллекция. Хочешь, заглянем?",
+    'Скажи, Отведи меня в магазин.',
+    'Пойдем же скорее!',
+    'А что тут у нас?',
+    'Вот если бы у меня были руки.',
+    "Отличный выбор!",
+    "Неплохо!",
+    "Ого!",
+    "Ну, мы все посмотрели, пойдем дальше!",
+    "Ух ты!",
+    "Ура! Ну ты и силен! Давай-ка сделаем на память об этом подвиге селфи",
+    "Прими позу погероичнее и скажи Сыыыыр!",
+    "Ой, я и не знал, что они такие хрупкие! Ладно, не беда, пойдем дальше!",
+    'Жаль, что наше время истекло! Надеюсь, мы увидимся еще!',
+    'Покаааааааа...'
     ]
 
     )

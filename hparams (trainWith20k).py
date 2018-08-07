@@ -59,7 +59,7 @@ hparams = tf.contrib.training.HParams(
     ###########################################################################################################################################
 
     #Tacotron
-    outputs_per_step = 1, #number of frames to generate at each decoding step (speeds up computation and allows for higher batch size)
+    outputs_per_step = 3, #number of frames to generate at each decoding step (speeds up computation and allows for higher batch size)
     stop_at_any = True, #Determines whether the decoder should stop when predicting <stop> to any frame or to all of them
 
     embedding_dim = 512, #dimension of embedding space
@@ -85,7 +85,7 @@ hparams = tf.contrib.training.HParams(
     postnet_channels = 512, #number of postnet convolution filters for each layer
 
     mask_encoder = False, #whether to mask encoder padding while computing attention
-    mask_decoder = False, #Whether to use loss mask for padded sequences (if False, <stop_token> loss function will not be weighted, else recommended pos_weight = 20)
+    mask_decoder = True, #Whether to use loss mask for padded sequences (if False, <stop_token> loss function will not be weighted, else recommended pos_weight = 20)
 
     cross_entropy_pos_weight = 20, #Use class weights to reduce the stop token classes imbalance (by adding more penalty on False Negatives (FN)) (1 = disabled)
     predict_linear = False, #Whether to add a post-processing network to the Tacotron to predict linear spectrograms (True mode Not tested!!)
@@ -139,8 +139,8 @@ hparams = tf.contrib.training.HParams(
 
     tacotron_decay_learning_rate = True, #boolean, determines if the learning rate will follow an exponential decay
     tacotron_start_decay = 50000, #Step at which learning decay starts
-    tacotron_decay_steps = 50000, #Determines the learning rate decay slope (UNDER TEST)
-    tacotron_decay_rate = 0.4, #learning rate decay rate (UNDER TEST)
+    tacotron_decay_steps = 40000, #Determines the learning rate decay slope (UNDER TEST)
+    tacotron_decay_rate = 0.2, #learning rate decay rate (UNDER TEST)
     tacotron_initial_learning_rate = 1e-3, #starting learning rate
     tacotron_final_learning_rate = 1e-5, #minimal learning rate
 
@@ -215,9 +215,10 @@ hparams = tf.contrib.training.HParams(
     "Аэропорт тадзима обслуживает Тоёока.",
     'Талиб Куили подтвердил новостному сайту, что он выпустит альбом в следующем году.',
     #From Training data:
-    ' Подробности мало кому интересны. Достаточно только сказать. Завод - это сделанная из сети западня в десять сажен длиною и саженей пять в ширину.',
-    'но на другой же месяц попался в краже мешков.',
+    ' Подробности мало кому интересны. Достаточно только сказать,|Завод - это сделанная из сети западня в десять сажен длиною и саженей пять в ширину.',
+    'но на другой же месяц попался в краже мешков.|но на другой же месяц попался в краже мешков.',
     'Архиерей посадил Мисаила с собой и стал говорить о том, какие новости проявились в его епархии.',
+    'it appears that oswald had only one caller in response to all of his fpcc activities,',
     'Где же это слыхано и видано, чтобы кошка собиралась говорить по телефону?',
     'И вот однажды, с первым попутным ветром, на исходе ночи, но еще в глубокой тьме, сотни лодок отплывают от Крымского полуострова под парусами в море.',
     ]

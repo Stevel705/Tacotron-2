@@ -101,7 +101,7 @@ def main():
         help='Steps between writing checkpoints')
     parser.add_argument('--eval_interval', type=int, default=10000,
         help='Steps between eval on test data')
-    parser.add_argument('--tacotron_train_steps', type=int, default=20000, help='total number of tacotron training steps')
+    parser.add_argument('--tacotron_train_steps', type=int, default=350000, help='total number of tacotron training steps')
     parser.add_argument('--wavenet_train_steps', type=int, default=360000, help='total number of wavenet training steps')
     parser.add_argument('--tf_log_level', type=int, default=1, help='Tensorflow C++ log level.')
     args = parser.parse_args()
